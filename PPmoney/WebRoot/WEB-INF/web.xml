@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <display-name></display-name>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>findAllNewsByPagesAction</servlet-name>
+    <servlet-class>com.zjx.Action.findAllNewsByPagesAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>findAllNewsByPages1Action</servlet-name>
+    <servlet-class>com.zjx.Action.findAllNewsByPages1Action</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>userInputInfoAction</servlet-name>
+    <servlet-class>com.zjx.Action.userInputInfoAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>mainAction</servlet-name>
+    <servlet-class>com.zjx.Action.mainAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>forgetPasswordAction</servlet-name>
+    <servlet-class>com.zjx.Action.forgetPasswordAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>updatePasswordAction</servlet-name>
+    <servlet-class>com.zjx.Action.updatePasswordAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>loginAction</servlet-name>
+    <servlet-class>com.zjx.Action.loginAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>showAllCasesAction</servlet-name>
+    <servlet-class>com.zjx.Action.showAllCasesAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>checkCardAction</servlet-name>
+    <servlet-class>com.zjx.Action.checkCardAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>manageMainAction</servlet-name>
+    <servlet-class>com.zjx.manage.Action.manageMainAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>UserShowAction</servlet-name>
+    <servlet-class>com.zjx.manage.Action.UserShowAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ProductShowAction</servlet-name>
+    <servlet-class>com.zjx.manage.Action.ProductShowAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>showAllLoanAction</servlet-name>
+    <servlet-class>com.zjx.Action.showAllLoanAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>HtranShowAction</servlet-name>
+    <servlet-class>com.zjx.manage.Action.HtranShowAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>NewsShowAction</servlet-name>
+    <servlet-class>com.zjx.manage.Action.NewsShowAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>CasesShowAction</servlet-name>
+    <servlet-class>com.zjx.manage.Action.CasesShowAction</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>addUserInfoAction</servlet-name>
+    <servlet-class>com.zjx.Action.addUserInfoAction</servlet-class>
+  </servlet>
+
+
+
+
+
+
+
+
+
+
+  <filter>
+  	<filter-name>fontFilter</filter-name>
+  	<filter-class>com.zjx.Filter.fontFilter</filter-class>
+  </filter>
+  <filter>
+  	<filter-name>UserFilter</filter-name>
+  	<filter-class>com.zjx.Filter.UserFilter</filter-class>
+  </filter>
+  
+
+
+
+  <servlet-mapping>
+    <servlet-name>findAllNewsByPagesAction</servlet-name>
+    <url-pattern>/findAllNewsByPages.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>findAllNewsByPages1Action</servlet-name>
+    <url-pattern>/findAllNewsByPages1.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>userInputInfoAction</servlet-name>
+    <url-pattern>/userInputInfo.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>mainAction</servlet-name>
+    <url-pattern>/main.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>forgetPasswordAction</servlet-name>
+    <url-pattern>/forgetPassword.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>updatePasswordAction</servlet-name>
+    <url-pattern>/updatePassword.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>loginAction</servlet-name>
+    <url-pattern>/login.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>showAllCasesAction</servlet-name>
+    <url-pattern>/showAllCases.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>checkCardAction</servlet-name>
+    <url-pattern>/checkCard.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>manageMainAction</servlet-name>
+    <url-pattern>/manage/manageMain.Action</url-pattern>
+  </servlet-mapping>
+  <filter-mapping>
+  	<filter-name>fontFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+  	<filter-name>UserFilter</filter-name>
+  	<url-pattern>/manage/*</url-pattern>
+  </filter-mapping>
+  <servlet-mapping>
+    <servlet-name>UserShowAction</servlet-name>
+    <url-pattern>/manage/UserShow.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ProductShowAction</servlet-name>
+    <url-pattern>/manage/ProductShow.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>showAllLoanAction</servlet-name>
+    <url-pattern>/showAllLoan.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>HtranShowAction</servlet-name>
+    <url-pattern>/manage/HtranShow.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>NewsShowAction</servlet-name>
+    <url-pattern>/manage/NewsShow.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CasesShowAction</servlet-name>
+    <url-pattern>/manage/CasesShow.Action</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>addUserInfoAction</servlet-name>
+    <url-pattern>/addUserInfo.Action</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
+  
+  <welcome-file-list>
+    <welcome-file>main.Action</welcome-file>
+  </welcome-file-list>
+</web-app>

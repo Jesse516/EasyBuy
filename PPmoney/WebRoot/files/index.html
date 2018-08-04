@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- saved from url=(0174)https://www.ppmoney.com/special/iframecms/index.html#height=1411&title=%u5E73%u53F0%u8D39%u7528%20%7C%20PPmoney%u5E2E%u52A9%u4E2D%u5FC3&url=/helpcenter/woyaotouzi___EJm2GJG-X -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>PPmoney</title>
+</head>
+<body>
+    <script type="text/javascript">
+        //获取url参数
+        function getQueryString(name,hash) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = location.hash.substr(1).match(reg) || location.search.substr(1).match(reg);
+            if (r != null)
+                return unescape(r[2]);
+            return '';
+        }
+        //计时器动态设置iframe高度
+        var doc = parent.parent.document;
+        var ifr = doc.getElementById('iframeCMS');
+        var iframeHeight = function () {
+            var height = getQueryString('height') || 1220;
+            ifr.style.height = height + 'px';
+            setTimeout(iframeHeight, 200);
+        };
+        iframeHeight();
+        doc.title = getQueryString('title') || doc.title || 'PPmoney';
+        if (/ppcms/i.test(parent.parent.window.location.href)) {
+            parent.parent.window.location.hash = 'url=' + getQueryString("url");
+        }
+        if (/loan/i.test(parent.parent.window.location.href)) {
+            doc.getElementsByClassName('g-ft-wrap')[0].style.display = 'none';
+        }
+    </script>
+
+</body></html>

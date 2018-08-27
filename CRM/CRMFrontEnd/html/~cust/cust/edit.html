@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../../script/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		/*获取超链接的全路径*/
+		var url=window.location.search;
+		/*全路径后拼接的编号参数值*/
+		var cust_no=url.substr(url.indexOf("=")+1);
+
+		$(function(){
+			var str="<table class=\"query_form_table\">";
+			$.ajax({
+				url:"http://localhost:7701/custFindByNo/"+cust_no,
+				type:"get",
+				success:function(obj){
+					str+="<tr>" +
+							"<th>客户编号</th>" +
+							"<td>"+obj.cust_no+"</td>" +
+							"<th>名称</th>" +
+							"<td><input id=\"c_name\" value=\""+obj.cust_name+"\" /><span class=\"red_star\">*</span></td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>地区</th>" +
+					"<td>" +
+					"<select id=\"c_region\" value=\"\">" +
+					"<option>请选择...</option>" +
+					"<option selected>"+obj.cust_region+"</option>" +
+					"<option >北京</option>" +
+					"<option>华北</option>" +
+					"<option>中南</option>" +
+					"<option>东北</option>" +
+					"<option>西部</option>" +
+					"</select>" +
+					"<span class=\"red_star\">*</span> </td>" +
+					"<th>客户经理</th>" +
+					"<td>" +
+					"<select id=\"manager_name\" value=\"\">" +
+					"<option>请选择...</option>" +
+					"<option selected>"+obj.cust_manager_name+"</option>" +
+					"<option>旺财</option>" +
+					"<option>球球</option>" +
+					"<option>孙小美</option>" +
+					"<option>周洁轮</option>" +
+					"</select><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>客户等级</th>" +
+					"<td>" +
+					"<select id=\"level_label\" value=\"\">" +
+					"<option>请选择...</option>" +
+					"<option selected>"+obj.cust_level_label+"</option>" +
+					"<option>合作伙伴</option>" +
+					"<option>大客户</option>" +
+					"<option>重点开发客户</option>" +
+					"<option>普通客户</option>" +
+					"</select><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"<th>　</th>" +
+					"<td>　</td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>客户满意度</th>" +
+					"<td>" +
+					"<select id=\"c_satisfy\" value=\"\"><option value=\"\">未指定</option>" +
+					"<option value=\"5\">☆☆☆☆☆</option>" +
+					"<option value=\"4\">☆☆☆☆</option>" +
+					"<option value=\"3\" selected=\"selected\">☆☆☆</option>" +
+							"<option value=\"2\">☆☆</option>" +
+							"<option value=\"1\">☆</option></select><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"<th>客户信用度</th>" +
+					"<td>" +
+					"<select id=\"c_credit\" value=\"\"><option value=\"\">未指定</option>" +
+					"<option value=\"5\">☆☆☆☆☆</option>" +
+							"<option value=\"4\">☆☆☆☆</option>" +
+							"<option value=\"3\" selected=\"selected\">☆☆☆</option>" +
+					"<option value=\"2\">☆☆</option>" +
+					"<option value=\"1\">☆</option></select>" +
+					"<span class=\"red_star\">*</span>" +
+					"</td>" +
+					"</tr>" +
+					"</table>" +
+					"<br />" +
+					"<table class=\"query_form_table\" id=\"table1\">" +
+					"<tr>" +
+					"<th>地址</th>" +
+					"<td><input value=\""+obj.cust_addr+"\"  id=\"c_addr\" /><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"<th>邮政编码</th>" +
+					"<td><input value=\""+obj.cust_zip+"\" name=\"T1\" size=\"20\" id=\"c_zip\" /><span class=\"red_star\">*</span></td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>电话</th>" +
+					"<td>" +
+					"<input value=\""+obj.cust_tel+"\" name=\"T4\" size=\"20\" id=\"c_tel\" /><span class=\"red_star\">*</span></td>" +
+					"<th>传真</th>" +
+					"<td>" +
+					"<input value=\""+obj.cust_fax+"\" name=\"T5\" size=\"20\" id=\"c_fax\" /><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>网址</th>" +
+					"<td>" +
+					"<input value=\""+obj.cust_website+"\" name=\"T6\" size=\"20\" id=\"c_website\"  /><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"<th>　</th>" +
+					"<td>　</td>" +
+					"</tr>" +
+					"</table>" +
+					"<br/>" +
+					"<table class=\"query_form_table\" id=\"table2\">" +
+					"<tr>" +
+					"<th>营业执照注册号</th>" +
+					"<td><input id=\"licence_no\" value=\""+obj.cust_licence_no+"\" name=\"T13\" size=\"20\" /></td>" +
+					"<th>法人</th>" +
+					"<td><input id=\"chieftain\" value=\""+obj.cust_chieftain+"\" name=\"T3\" size=\"20\" /><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>注册资金（万元）</th>" +
+					"<td>" +
+					"<input id=\"bankroll\" value=\""+obj.cust_bankroll+"\" name=\"T7\" size=\"20\" /> </td>" +
+					"<th>年营业额</th>" +
+					"<td>" +
+					"<input id=\"turnover\" value=\""+obj.cust_turnover+"\" name=\"T8\" size=\"20\" />" +
+					"</td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>开户银行</th>" +
+					"<td>" +
+					"<input id=\"c_bank\" value=\""+obj.cust_bank+"\" name=\"T9\" size=\"20\" /><span class=\"red_star\">*</span>" +
+					"</td>" +
+					"<th>银行帐号</th>" +
+					"<td><input id=\"c_account\" value=\""+obj.cust_bank_account+"\" name=\"T10\" size=\"20\" /><span class=\"red_star\">*</span></td>" +
+					"</tr>" +
+					"<tr>" +
+					"<th>地税登记号</th>" +
+					"<td>" +
+					"<input id=\"local_tax_no\" value=\""+obj.cust_local_tax_no+"\" name=\"T11\" size=\"20\" /></td>" +
+					"<th>国税登记号</th>" +
+					"<td><input id=\"national_tax_no\" value=\""+obj.cust_national_tax_no+"\" name=\"T12\" size=\"20\" /></td>" +
+					"</tr>" +
+					"</table>";
+					$("#consumerView").html(str);
+				}
+			});
+		})
+
+
+		//修改---执行修改传参数
+		function doUpdateConsumer(){
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值*/
+			var cust_no=url.substr(url.indexOf("=")+1);
+			var c_name=$("#c_name").val();
+			var c_region=$("#c_region").val();
+			var manager_name=$("#manager_name").val();
+			var level_label=$("#level_label").val();
+			var c_satisfy=$("#c_satisfy").val();
+			var c_credit=$("#c_credit").val();
+			var c_addr=$("#c_addr").val();
+			var c_zip=$("#c_zip").val();
+			var c_tel=$("#c_tel").val();
+			var c_fax=$("#c_fax").val();
+			var c_website=$("#c_website").val();
+			var licence_no=$("#licence_no").val();
+			var chieftain=$("#chieftain").val();
+			var bankroll=$("#bankroll").val();
+			var turnover=$("#turnover").val();
+			var c_bank=$("#c_bank").val();
+			var c_account=$("#c_account").val();
+			var local_tax_no=$("#local_tax_no").val();
+			var national_tax_no=$("#national_tax_no").val();
+			var data="{cust_no:\""+cust_no+"\",cust_name:\""+c_name+"\",cust_region:\""+c_region+"\",cust_manager_name:\""+manager_name+"\"," +
+					"cust_level_label:\""+level_label+"\",cust_satisfy:\""+c_satisfy+"\",cust_credit:\""+c_credit+"\",cust_addr:\""+c_addr+"\",cust_zip:\""+c_zip+"\"," +
+					"cust_tel:\""+c_tel+"\",cust_fax:\""+c_fax+"\",cust_website:\""+c_website+"\",cust_licence_no:\""+licence_no+"\",cust_chieftain:\""+chieftain+"\"," +
+					"cust_bankroll:\""+bankroll+"\",cust_turnover:\""+turnover+"\",cust_bank:\""+c_bank+"\",cust_bank_account:\""+c_account+"\"," +
+					"cust_local_tax_no:\""+local_tax_no+"\",cust_national_tax_no:\""+national_tax_no+"\"}";
+			$.ajax({
+				url:"http://localhost:7701/updateConsumerByNo",
+				data:data,
+				type:"post",
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("修改成功！");
+						window.location.href="list.html";
+					}else{
+						alert("修改失败！");
+					}
+				},
+				error:function(){
+					alert("修改失败！");
+				}
+			})
+		}
+
+
+
+	</script>
+
+
+
+</head>
+<body>
+
+<div class="page_title">客户信息管理 > 客户信息</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="searchLinkMan();">联系人</button>
+	<button class="common_button" onclick="to('activities.html');">交往记录</button>
+	<button class="common_button" onclick="to('orders.html');">历史订单</button>
+	
+	<button class="common_button" onclick="javascript:window.history.back(-1);">返回</button>
+	<button class="common_button" onclick="doUpdateConsumer();">保存</button>
+</div>
+
+<div id="consumerView">
+	<!--<table class="query_form_table">
+		<tr>
+			<th>客户编号</th>
+			<td>KH071202001</td>
+			<th>名称</th>
+			<td><input value="北京聪海信息科技有限公司" /><span class="red_star">*</span></td>
+		</tr>
+		<tr>
+			<th>地区</th>
+			<td>
+				<select>
+					<option>请选择...</option>
+					<option selected>北京</option>
+					<option>华北</option>
+					<option>中南</option>
+					<option>东北</option>
+					<option>西部</option>
+				</select>
+				<span class="red_star">*</span></td>
+			<th>客户经理</th>
+			<td>
+				<select>
+					<option>请选择...</option>
+					<option selected>小明</option>
+					<option>旺财</option>
+					<option>球球</option>
+					<option>孙小美</option>
+					<option>周洁轮</option>
+				</select><span class="red_star">*</span>
+			</td>
+		</tr>
+		<tr>
+			<th>客户等级</th>
+			<td>
+				<select>
+					<option>请选择...</option>
+					<option selected>战略合作伙伴</option>
+					<option>合作伙伴</option>
+					<option>大客户</option>
+					<option>重点开发客户</option>
+					<option>普通客户</option>
+				</select><span class="red_star">*</span>
+			</td>
+			<th>　</th>
+			<td>　</td>
+		</tr>
+		<tr>
+			<th>客户满意度</th>
+			<td>
+				<select><option value="">未指定</option>
+						<option value="5">☆☆☆☆☆</option>
+						<option value="4">☆☆☆☆</option>
+						<option value="3" selected="selected">☆☆☆</option>
+						<option value="2">☆☆</option>
+						<option value="1">☆</option></select><span class="red_star">*</span>
+			</td>
+			<th>客户信用度</th>
+			<td>
+				<select><option value="">未指定</option>
+						<option value="5">☆☆☆☆☆</option>
+						<option value="4">☆☆☆☆</option>
+						<option value="3" selected="selected">☆☆☆</option>
+						<option value="2">☆☆</option>
+						<option value="1">☆</option></select><span class="red_star">*</span>
+			</td>
+		</tr>
+	</table>
+	<br />
+	<table class="query_form_table" id="table1">
+		<tr>
+			<th>地址</th>
+			<td><input value="北京市海淀区成府路702号"  /><span class="red_star">*</span>
+			</td>
+			<th>邮政编码</th>
+			<td><input value="100027" name="T1" size="20" /><span class="red_star">*</span></td>
+		</tr>
+		<tr>
+			<th>电话</th>
+			<td>
+				<input value="010-62283393" name="T4" size="20"  /><span class="red_star">*</span></td>
+			<th>传真</th>
+			<td>
+				<input value="010-62283396" name="T5" size="20"  /><span class="red_star">*</span>
+			</td>
+		</tr>
+		<tr>
+			<th>网址</th>
+			<td>
+				<input value="www.conghai.com" name="T6" size="20"  /><span class="red_star">*</span>
+			</td>
+			<th>　</th>
+			<td>　</td>
+		</tr>
+	</table>
+	<br />
+	<table class="query_form_table" id="table2">
+		<tr>
+			<th>营业执照注册号</th>
+			<td><input value="" name="T13" size="20" /></td>
+			<th>法人</th>
+			<td><input value="聪颖" name="T3" size="20" /><span class="red_star">*</span>
+			</td>
+		</tr>
+		<tr>
+			<th>注册资金（万元）</th>
+			<td>
+				<input value="" name="T7" size="20" /> </td>
+			<th>年营业额</th>
+			<td>
+				<input value="" name="T8" size="20" />
+			</td>
+		</tr>
+		<tr>
+			<th>开户银行</th>
+			<td>
+				<input value="北京银行 中关村支行" name="T9" size="20" /><span class="red_star">*</span>
+			</td>
+			<th>银行帐号</th>
+			<td><input value="62258827238382838" name="T10" size="20" /><span class="red_star">*</span></td>
+		</tr>
+		<tr>
+			<th>地税登记号</th>
+			<td>
+				<input value="" name="T11" size="20" /></td>
+			<th>国税登记号</th>
+			<td><input value="" name="T12" size="20" /></td>
+		</tr>
+	</table>-->
+</div>
+<p>　</p>
+</body>
+</html>

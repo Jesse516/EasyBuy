@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script src="../script/common.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			showList();
+		})
+
+		function showList(){
+			var pageNo=$("#spageno").val();
+			var pageSize=$("#spagesize").val();
+			var prod_name=$("#prod_name").val();
+			var prod_type=$("#prod_type").val();
+			var prod_batch=$("#prod_batch").val();
+			var data="{prod_name:\""+prod_name+"\",prod_type:\""+prod_type+"\",prod_batch:\""+prod_batch+"\",pageNo:\""+pageNo+"\",pageSize:\""+pageSize+"\"}";
+			var str="<tr><th>编号</th><th>名称</th><th>型号</th><th>等级/批次</th><th>单位</th><th>单价（元）</th><th>备注</th></tr>";
+			$.ajax({
+				url:"http://localhost:7701/findAllpro",
+				type:"post",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						for(var i=0;i<obj.baslist.length;i++){
+							str+="<tr>"+
+									"<td class=\"list_data_number\" >"+obj.baslist[i].prod_id+"</td>"+
+									"<td class=\"list_data_ltext\" >"+obj.baslist[i].prod_name+"</td>"+
+									"<td class=\"list_data_text\" >"+obj.baslist[i].prod_type+"</td>"+
+									"<td class=\"list_data_text\">"+obj.baslist[i].prod_batch+"</td>"+
+									"<td class=\"list_data_text\" >"+obj.baslist[i].prod_unit+"</td>" +
+									"<td class=\"list_data_number\" >"+obj.baslist[i].prod_price+"</td>"+
+									"<td class=\"list_data_ltext\">"+obj.baslist[i].prod_memo+"</td>"+
+									"</tr>";
+						}
+						str+="<tr>"+
+								"<th colspan=\"7\" class=\"pager\">"+
+								"<div class=\"pager\">"+
+								"共<span id=\"totleRecord\">"+obj.countRecord+"</span>条记录 每页<input value=\""+obj.pageSize+"\" size=\"2\" id=\"pageSize\" />条"+
+								"第<input value=\""+obj.pageNo+"\" size=\"2\" id=\"pageNo\"/>页/共<span id=\"countPage\">"+obj.countPage+"</span>页"+
+								"<a><span onclick='firstPage();'>第一页</span></a>"+
+								"<a><span onclick='upPage();'>上一页</span></a>"+
+								"<a><span onclick='nextPage();'>下一页</span></a>"+
+								"<a><span onclick='lastPage();'>最后一页</span></a>"+
+								"转到<input value=\""+obj.pageNo+"\" size=\"2\" id='targetPage' />页"+
+								"<button width=\"20\" onclick='targetPage();' >GO</button>"+
+								"</div>"+
+								"</th>"+
+								"</tr>";
+					}
+					$("#spageno").val(obj.pageNo);
+					$("#spagesize").val(obj.pageSize);
+					$(".data_list_table").html(str);
+				},
+				error:function(){
+					$(".data_list_table").html("<p align='center' style='margin-top: 100px;font-size: 30px;color: red;font-style: italic'>抱歉，没有符合您需要的数据，请重新查询</p>");
+				}
+			})
+		}
+
+		//点击查询时执行
+		function searchChance(){
+			var pageNo=$("#targetPage").val()
+			var pageSize=$("#pageSize").val();
+			$("#spageno").val(pageNo);
+			$("#spagesize").val(pageSize);
+			showList();
+
+		}
+
+		//点击第一页
+		function firstPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			$("#spageno").val(1);
+			showList();
+		}
+		//点击上一页
+		function upPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#pageNo").val()
+			var pageSize=$("#pageSize").val();
+			$("#spageno").val(pageNo-1);
+			$("#spagesize").val(pageSize);
+			showList();
+		}
+
+		//点击下一页
+		function nextPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#pageNo").val();
+			var newPageNo=parseInt(pageNo)+parseInt(1);
+			var pageSize=$("#pageSize").val();
+			$("#spageno").val(newPageNo);
+			$("#spagesize").val(pageSize);
+			showList();
+		}
+
+		//点击最后一页
+		function lastPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#countPage").html()
+			var pageSize=$("#pageSize").val();
+			$("#spageno").val(pageNo);
+			$("#spagesize").val(pageSize);
+			showList();
+		}
+
+
+		//点击跳转页
+		function targetPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#targetPage").val()
+			var pageSize=$("#pageSize").val();
+			$("#spageno").val(pageNo);
+			$("#spagesize").val(pageSize);
+			showList();
+		}
+
+
+	</script>
+</head>
+<body>
+
+<div class="page_title">产品查询</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="searchChance();">查询</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>名称</th>
+		<td><input id="prod_name"/></td>
+		<th>型号</th>
+		<td><input id="prod_type"/></td>
+		<th>批次</th>
+		<td><input id="prod_batch"/></td>
+	</tr>
+</table>
+<br />
+<table class="data_list_table">
+	<!--<tr>
+		<th>编号</th>
+		<th>名称</th>
+		<th>型号</th>
+		<th>等级/批次</th>
+		<th>单位</th>
+		<th>单价（元）</th>
+		<th>备注</th>
+	</tr>
+	<tr>
+		<td class="list_data_number">1</td>
+		<td class="list_data_ltext">幸福牌电视机</td>
+		<td class="list_data_text">818 FFT</td>
+		<td class="list_data_text">2388 EA03</td>
+		<td class="list_data_text">台</td>
+		<td class="list_data_number">7500</td>
+		<td class="list_data_ltext">代生产&nbsp;</td>		
+	</tr>
+	<tr>
+		<td class="list_data_number">2</td>
+		<td class="list_data_ltext">幸福牌收音机</td>
+		<td class="list_data_text">天语007</td>
+		<td class="list_data_text">7878 006A</td>
+		<td class="list_data_text">台</td>
+		<td class="list_data_number">36</td>
+		<td class="list_data_ltext">代生产&nbsp;</td>		
+	</tr>
+	<tr>
+		<td class="list_data_number">3</td>
+		<td class="list_data_ltext">海龙笔记本电脑</td>
+		<td class="list_data_text">i60 </td>
+		<td class="list_data_text">2688 9966</td>
+		<td class="list_data_text">台</td>
+		<td class="list_data_number">9800</td>
+		<td class="list_data_ltext">&nbsp;</td>		
+	</tr>
+	<tr>
+		<td class="list_data_number">4</td>
+		<td class="list_data_ltext">海龙笔记本电脑</td>
+		<td class="list_data_text">i61 </td>
+		<td class="list_data_text">2689 6688</td>
+		<td class="list_data_text">台</td>
+		<td class="list_data_number">16800</td>
+		<td class="list_data_ltext">&nbsp;</td>		
+	</tr>
+	<tr>
+		<td class="list_data_number">5</td>
+		<td class="list_data_ltext">海龙笔记本电脑</td>
+		<td class="list_data_text">i61 </td>
+		<td class="list_data_text">2689 6689</td>
+		<td class="list_data_text">台</td>
+		<td class="list_data_number">15800</td>
+		<td class="list_data_ltext">&nbsp;</td>		
+	</tr>
+	<tr>
+		<th colspan="100" class="pager">
+<div class="pager">
+	共59条记录 每页<input value="10" size="2" />条
+	第<input value="1" size="2"/>页/共5页
+	<a href="#">第一页</a>
+	<a href="#">上一页</a>
+	<a href="#">下一页</a>
+	<a href="#">最后一页</a>
+	转到<input value="1" size="2" />页
+	<button width="20" onclick="reload();">GO</button>
+</div>
+		</th>
+	</tr>-->
+</table>
+<input type="hidden" id="spageno"/><input type="hidden" id="spagesize"/>
+</body>
+</html>

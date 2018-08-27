@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script src="../script/common.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			var url=window.location.search;
+			var pla_chc_id=url.substr(url.indexOf("=")+1);
+			var str="<tr><th width=\"160px\">日期</th><th height=\"31\">计划项</th><th>执行效果</th></tr>";
+			$.ajax({
+				url:"http://localhost:7702/findChance/"+pla_chc_id,
+				type:"get",
+				success:function(obj){
+					if(obj!=null){
+						$("#M1").html(obj.chc_id);
+						$("#M2").html(obj.chc_source);
+						$("#M3").html(obj.chc_cust_name);
+						$("#M4").html(obj.chc_rate);
+						$("#M5").html(obj.chc_title);
+						$("#M6").html(obj.chc_linkman);
+						$("#M7").html(obj.chc_tel);
+						$("#M8").html(obj.chc_desc);
+						$("#M9").html(obj.chc_create_by);
+						$("#M10").html(obj.chc_create_date);
+						$("#M11").html(obj.chc_due_to);
+						$("#M12").html(obj.chc_due_date);
+						$("#M13").html(obj.chc_status);
+						for(var i=0;i<obj.plan.length;i++){
+							str+="<tr>" +
+									"<tr>" +
+									"<td class=\"list_data_text\" >"+obj.plan[i].pla_date+"</td>" +
+									"<td class=\"list_data_ltext\">"+obj.plan[i].pla_todo+"</td>" +
+									"<td class=\"list_data_ltext\">"+obj.plan[i].pla_result+"</td>";
+						}
+						$("#table1").html(str);
+					}
+				},
+				error:function(){
+					alert("页面跑丢了");
+				}
+			})
+
+
+
+		})
+	</script>
+</head>
+<body>
+
+<div class="page_title">客户开发计划 &gt; 查看</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="back();">返回</button>
+	</div>
+<table class="query_form_table" >
+	<tr>
+	<th>编号</th>
+	<td id="M1"></td>
+	<th>机会来源</th>
+	<td id="M2"></td>
+</tr>
+	<tr>
+		<th>客户名称</th>
+		<td id="M3"></td>
+		<th>成功机率（%）</th>
+		<td id="M4">&nbsp;</td>
+	</tr>
+	<tr>
+		<th>概要</th>
+		<td ></td>
+		<th>状态</th>
+		<td id="M13" style="color:red;"></td>
+	</tr>
+	<tr>
+		<th>联系人</th>
+		<td id="M6"></td>
+		<th>联系人电话</th>
+		<td id="M7"></td>
+	</tr>
+	<tr>
+		<th>机会描述</th>
+		<td colspan="3" id="M8"></td>
+	</tr>
+	<tr>
+		<th>创建人</th>
+		<td id="M9"></td>
+		<th>创建时间</th>
+		<td id="M10"></td>
+	</tr>
+	<tr>
+		<th>指派给</th>
+		<td id="M11">郭小美</td>
+		<th>指派时间</th>
+		<td id="M12"></td>
+	</tr>
+</table>
+<br />
+<table class="data_list_table" id="table1">
+	<tr>
+		<th>日期</th>
+		<th>计划</th>
+		<th>执行效果</th>
+	</tr>
+	<tr>
+		<td class="list_data_text">2008年01月18日</td>
+		<td class="list_data_ltext">初步接触，了解客户意向。</td>
+		<td class="list_data_ltext">了解到客户季度末有采购需求。
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_text">2008年02月22日</td>
+		<td class="list_data_ltext">推介产品。</td>
+		<td class="list_data_ltext">客户同意采购本公司产品。但希望就价格达成一致。
+		</td>
+	</tr>
+	</table>
+</body>
+</html>

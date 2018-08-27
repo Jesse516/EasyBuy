@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script src="../script/common.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			showAllUser();
+		});
+
+		//封装显示指派人的功能，从用户模块查询出来
+		function showAllUser(){
+			//获取当前时间
+			var d = new Date();
+			var year=d.getFullYear();
+			var month=d.getMonth()+1;
+			if(month<10){
+				month="0"+month;
+			}
+			var date=d.getDate();
+			if(date<10){
+				date="0"+date;
+			}
+			var hour=d.getHours();
+			if(hour==00){
+				hour="00";
+			}
+			var minutes= d.getMinutes();
+			if(minutes<10){
+				minutes="0"+minutes;
+			}
+			var second= d.getSeconds();
+			if(second<10){
+				second="0"+second;
+			}
+			var time=year+"-"+month+"-"+date+" "+hour+":"+minutes+":"+second;
+			$("#chc_create_by").val(localStorage.getItem("loginUser"));
+
+			var str="<tr><th>指派给</th><td><select name=\"D1\" id=\"chc_due_to\"><option value=\"请选择\">请选择</option>";
+			$.ajax({
+				url:"http://localhost:7701/findAllUser",
+				type:"get",
+				success:function(obj){
+					if(obj!=null){
+						for(var i=0;i<obj.length;i++){
+							str+="<option value=\""+obj[i].usr_name+"\">"+obj[i].usr_name+"</option>";
+						}
+						str+="</select> <span class=\"red_star\">*</span></td><th>指派时间</th>"+
+						"<td><input id=\"t2\" name=\"T20\" readonly size=\"20\" /><span class=\"red_star\">*</span></td></tr>";
+					}
+
+					$("#table1").html(str);
+					$("#t2").val(time);
+					$("#t1").val(time);
+				},
+				error:function(){
+					alert("网页跑丢了，再来一次吧。。。");
+					window.history.back();
+				}
+			})
+		}
+
+		//执行添加功能
+		function addAslChance(){
+			var chc_id=$("#chc_id").val();
+			var chc_source=$("#chc_source").val();
+			var chc_cust_name=$("#chc_cust_name").val();
+			var chc_rate=$("#chc_rate").val();
+			var chc_title=$("#chc_title").val();
+			var chc_linkman=$("#chc_linkman").val();
+			var chc_tel=$("#chc_tel").val();
+			var chc_desc=$("#chc_desc").val();
+			var chc_create_by=$("#chc_create_by").val();
+			var chc_create_date=$("#t1").val();
+			var chc_due_to=$("#chc_due_to").val();
+			var chc_due_date=$("#t2").val();
+			var token=localStorage.getItem("token");
+			var data="{chc_source:\""+chc_source+"\",chc_cust_name:\""+chc_cust_name+"\",chc_rate:\""+chc_rate+"\",chc_title:\""+chc_title+"\",chc_linkman:\""+chc_linkman+"\",chc_tel:\""+chc_tel+"\",chc_desc:\""+chc_desc+"\",chc_create_by:\""+chc_create_by+"\",chc_due_to:\""+chc_due_to+"\",chc_create_date:\""+chc_create_date+"\",chc_due_date:\""+chc_due_date+"\",token:\""+token+"\"}";
+			alert(localStorage.getItem("token"));
+			$.ajax({
+				url:"http://localhost:7702/addAslChance",
+				type:"post",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("新建成功！")
+						window.location.href="list.html";
+					}
+				},
+				error:function(){
+					alert("新建失败！");
+				}
+			})
+		}
+
+
+
+	</script>
+</head>
+<body>
+
+<div class="page_title">销售机会管理&nbsp; &gt; 新建销售机会</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="back();">返回</button>
+	<button class="common_button" onclick="addAslChance();">保存</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>编号</th>
+		<td><input readonly id="chc_id" placeholder="系统自动生成"/></td>
+		<th>机会来源</th>
+		<td>
+			<input name="T4" size="20" id="chc_source"/></td>
+	</tr>
+	<tr>
+		<th>客户名称</th>
+		<td><input  id="chc_cust_name"/><span class="red_star">*</span></td>
+		<th>成功机率</th>
+		<td><input id="chc_rate"/><span class="red_star">*</span></td>
+	</tr>	
+	<tr>
+		<th>概要</th>
+		<td colspan="3"><input name="T0" size="52" id="chc_title"/><span class="red_star">*</span></td>
+	</tr>
+	<tr>
+		<th>联系人</th>
+		<td><input name="T21" size="20" id="chc_linkman"/></td>
+		<th>联系人电话</th>
+		<td><input name="T5" size="20" id="chc_tel"/></td>
+	</tr>
+	<tr>
+		<th>机会描述</th>
+		<td colspan="3"><textarea rows="6" cols="50" name="S1" id="chc_desc"></textarea><span class="red_star">*</span></td>
+	</tr>
+	<tr>
+		<th>创建人</th>
+		<td><input name="T19" value="" readonly size="20" id="chc_create_by"/><span class="red_star">*</span></td>
+		<th>创建时间</th>
+		<td><input id="t1" name="T15" readonly size="20" id="chc_create_date"/><span class="red_star">*</span></td>
+	</tr>
+</table>
+<br />
+<table disabled class="query_form_table" id="table1">
+	<<!--tr>
+		<th>指派给</th>
+		<td>
+			<select name="D1">
+				<option>请选择...</option>
+				<option>小明</option>
+				<option>旺财</option>
+				<option>球球</option>
+				<option>孙小美</option>
+				<option>周洁轮</option>
+			</select> <span class="red_star">*</span></td>
+		<th>指派时间</th>
+		<td>
+			<input id="t2" name="T20" readonly size="20" /><span class="red_star">*</span></td>
+	</tr>-->
+</table>
+<script>
+	/*setCurTime('t1');
+	setCurTime('t2');*/
+</script>
+</body>
+</html>

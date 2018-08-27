@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script src="../script/common.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		function addBas(){
+			var dict_type=$("#dict_type").val();
+			var dict_item=$("#dict_item").val();
+			var dict_value=$("#dict_value").val();
+			var flag=$("input[type='checkbox']:checked").val();
+			var dict_id_editable=null;
+			if(flag=="编辑"){
+				dict_id_editable="是";
+			}else{
+				dict_id_editable="否";
+			};
+			alert(dict_id_editable);
+
+			var data={dict_type:dict_type,dict_item:dict_item,dict_value:dict_value,dict_id_editable:dict_id_editable};
+			$.ajax({
+				url:"http://localhost:7703/basActivityAdd",
+				data:JSON.stringify(data),
+				type:"post",
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("添加成功！");
+						window.location.href="dict.html";
+					}
+				},
+				error:function(){
+					alert("添加失败！");
+				}
+			})
+
+
+
+		}
+
+
+
+	</script>
+
+</head>
+<body>
+
+<div class="page_title">数据字典管理 > 新建数据字典条目</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="back();">返回</button>
+	<button class="common_button" onclick="addBas();">保存</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>编号</th>
+		<td><input readonly /></td>
+		<th>类别</th>
+		<td><input id="dict_type"/><span class="red_star" >*</span><br />（需要使用Ajax实现自动补全功能）</td>
+	</tr>
+	<tr>
+		<th>条目</th>
+		<td><input id="dict_item" /><span class="red_star">*</span></td>
+		<th>值</th>
+		<td><input  id="dict_value" /><span class="red_star">*</span></td>
+	</tr>	
+	<tr>
+		<th>是否可编辑</th>
+		<td><input type="checkbox"  value="编辑" id="dict_id_editable"/></td>
+		<th>&nbsp;</th>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+</body>
+</html>

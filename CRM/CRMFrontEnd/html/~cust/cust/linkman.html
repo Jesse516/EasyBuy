@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script src="../../script/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+
+	<script type="text/javascript">
+
+		$(function(){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值客户编号*/
+			var start=url.indexOf("=");
+			var end=url.indexOf("&");
+			var cust_no=url.substr(start+1,end-start-1);
+			/*全路径后拼接的编号参数值客户名称*/
+			var cust_name=url.substr(url.lastIndexOf("=")+1);
+			$("#custNo").html(cust_no);
+			$("#custName").html(cust_name);
+
+			var str="<tr><th>姓名</th><th class=\"list_data_ltext\">性别</th><th>职位</th><th>办公电话</th><th>手机</th><th>备注</th><th>操作</th></tr>";
+			$.ajax({
+				url:"http://localhost:7701/findAllLinkMan/"+cust_no,
+				type:"get",
+			/*	data:cust_no,*/
+				success:function(obj){
+					for(var i= 0;i<obj.length;i++){
+						str+="<tr>"+
+								"<td class=\"list_data_text\">"+obj[i].lkm_name+"</td>"+
+								"<td class=\"list_data_ltext\">"+obj[i].lkm_sex+"</td>"+
+								"<td class=\"list_data_text\">"+obj[i].lkm_postion+"</td>"+
+								"<td class=\"list_data_text\">"+obj[i].lkm_tel+"</td>"+
+								"<td class=\"list_data_text\">"+obj[i].lkm_mobile+"</td>"+
+								"<td class=\"list_data_op\">"+obj[i].lkm_memo+"</td>"+
+								"<td class=\"list_data_op\">"+
+								"<img onclick='updateLinkMan(\""+obj[i].lkm_id+"\")' title=\"编辑\" src=\"../../images/bt_edit.gif\" class=\"op_button\" />"+
+								"<img onclick='deleteLinkManBId(\""+obj[i].lkm_id+"\")' title=\"删除\" src=\"../../images/bt_del.gif\" class=\"op_button\" />"+
+								"</td>"+
+								"</tr>";
+					};
+						$(".data_list_table").html(str);
+
+				}
+			});
+		})
+
+		//修改联系人信息
+		function updateLinkMan(lkm_id){
+			window.location.href="linkman_edit.html?lkm_id="+lkm_id;
+		}
+
+		//添加联系人功能，传递当前供应商参数
+		function addLinkMan(){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值客户编号*/
+			var start=url.indexOf("=");
+			var end=url.indexOf("&");
+			var cust_no=url.substr(start+1,end-start-1);
+			window.location.href="linkman_add.html?cust_no="+cust_no;
+		}
+
+
+		//删除联系人功能，假删除，把状态码改成0
+		function deleteLinkManBId(lkm_id){
+			if(confirm("确定要删除？")){
+				$.ajax({
+					url:"http://localhost:7701/delLinkManById/"+lkm_id,
+					type:"delete",
+					success:function(obj){
+						if(obj!=null){
+							alert("删除成功！");
+							window.location.href="list.html";
+						}
+					},
+					error:function(){
+						alert("删除失败！");
+					}
+				})
+			}
+		}
+
+
+
+	</script>
+
+
+</head>
+<body>
+<div class="page_title">客户信息管理 > 客户信息 > 联系人 </div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="addLinkMan();">新建</button>
+	<button class="common_button" onclick="back();">返回</button>  
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>客户编号</th>
+		<td id="custNo"></td>
+		<th>客户名称</th>
+		<td id="custName"></td>
+	</tr>
+</table>
+<br />
+<table class="data_list_table">
+<!--	<tr>
+		<th>姓名</th>
+		<th>性别</th>
+		<th>职位</th>
+		<th>办公电话</th>
+		<th>手机</th>
+		<th>备注</th>
+		<th>操作</th>
+	</tr>
+	<tr>
+		<td class="list_data_text">沈聪林</td>
+		<td class="list_data_ltext">男</td>
+		<td class="list_data_text">总经理</td>
+		<td class="list_data_text">010-68348438-668</td>
+		<td class="list_data_text">13622883228</td>
+		<td class="list_data_op">
+			　</td>
+		<td class="list_data_op">
+			<img onclick="to('linkman_edit.html');" title="编辑" src="../../images/bt_edit.gif" class="op_button" />
+			<img onclick="del('“联系人：沈聪林”');" title="删除" src="../../images/bt_del.gif" class="op_button" />
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_text">杨影</td>
+		<td class="list_data_ltext">女</td>
+		<td class="list_data_text">总经理助理</td>
+		<td class="list_data_text">010-68348438-326</td>
+		<td class="list_data_text">13728838283</td>
+		<td class="list_data_op">
+			　</td>
+		<td class="list_data_op">
+			<img onclick="to('linkman_edit.html');" title="编辑" src="../../images/bt_edit.gif" class="op_button" />
+			<img onclick="del('“联系人：杨影”');" title="删除" src="../../images/bt_del.gif" class="op_button" />
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_text">詹兆辉</td>
+		<td class="list_data_ltext">男</td>
+		<td class="list_data_text">供销部经理</td>
+		<td class="list_data_text">010-68348438-520</td>
+		<td class="list_data_text">13622883235</td>
+		<td class="list_data_op">
+			　</td>
+		<td class="list_data_op">
+			<img onclick="to('linkman_edit.html');" title="编辑" src="../../images/bt_edit.gif" class="op_button" />
+			<img onclick="del('“联系人：詹兆辉”');" title="删除" src="../../images/bt_del.gif" class="op_button" />&nbsp;
+		</td>
+	</tr>-->
+	</table>
+</body>
+</html>

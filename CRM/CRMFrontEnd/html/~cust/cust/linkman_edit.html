@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script src="../../script/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+
+	<script type="text/javascript">
+		var url=window.location.search;
+		var lkm_id=url.substr(url.indexOf("=")+1);
+		$(function(){
+			var str="<tr>";
+			$.ajax({
+				url:"http://localhost:7701/findLinkmanById/"+lkm_id,
+				type:"get",
+				success:function(obj){
+					if(obj!=null){
+						str+="<th>姓名</th>"+
+								"<input type='hidden' id='lkmid' value=\""+obj.lkm_id+"\" />"+
+								"<td><input readonly name=\"T3\" id=\"lkm_name\" value=\""+obj.lkm_name+"\" size=\"20\" /><span class=\"red_star\">*</span></td>"+
+								"<th>性别</th>"+
+								"<td id=\"lkm_sex\">"+
+								"<input type=\"radio\"  name=\"gander\" value='男'  />男"+
+								"<input type=\"radio\"  name=\"gander\" value='女'  />女"+
+								"</td>"+
+								"</tr>"+
+								"<tr>"+
+								"<th>职位</th>"+
+								"<td><input name=\"T4\" id=\"lkm_postion\" value=\""+obj.lkm_postion+"\" size=\"20\" /><span class=\"red_star\">*</span></td>"+
+								"<th>办公电话</th>"+
+								"<td><input name=\"T5\" id=\"lkm_tel\" value=\""+obj.lkm_tel+"\" size=\"20\" /><span class=\"red_star\">*</span></td>"+
+								"</tr>"+
+								"<tr>"+
+								"<th>手机</th>"+
+								"<td><input name=\"T1\" id=\"lkm_mobile\" value=\""+obj.lkm_mobile+"\" size=\"20\" /></td>"+
+								"<th>备注</th>"+
+								"<td><input name=\"T2\" id='lkm_memo' value=\""+obj.lkm_memo+"\" size=\"20\" /></td>"+
+								"</tr>";
+						$("#table1").html(str);
+					}
+				},
+				error:function(){
+					alert("修改失败，请重试！");
+				}
+			});
+		})
+
+		//修改联系人
+		function doUpdateLinkMan(){
+			var url=window.location.search;
+			var lkm_id=url.substr(url.indexOf("=")+1);
+			var lkm_sex=$('input:radio[name="gander"]:checked').val();
+			var lkm_postion=$("#lkm_postion").val();
+			var lkm_tel=$("#lkm_tel").val();
+			var lkm_mobile=$("#lkm_mobile").val();
+			var lkm_memo=$("#lkm_memo").val();
+			var data="{lkm_id:\""+lkm_id+"\",lkm_sex:\""+lkm_sex+"\",lkm_postion:\""+lkm_postion+"\",lkm_tel:\""+lkm_tel+"\",lkm_mobile:\""+lkm_mobile+"\",lkm_memo:\""+lkm_memo+"\"}";
+			$.ajax({
+				url:"http://localhost:7701/updateLinkManById",
+				type:"put",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success: function (obj) {
+					if(obj!=null){
+						alert("修改成功");
+						window.location.href="list.html";
+					}
+				},
+				error:function(){
+					alert("修改失败!");
+				}
+			});
+		}
+
+	</script>
+
+
+
+</head>
+<body>
+
+<div class="page_title">客户信息管理 > 客户信息 > 联系人 > 编辑联系人</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="javascript:window.history.back(-1);">返回</button>
+	<button class="common_button" onclick="doUpdateLinkMan();">保存</button>
+</div>
+<table class="query_form_table" id="table1">
+	<!--<tr>
+		<th>姓名</th>
+		<td><input readonly name="T3" value="沈聪林" size="20" /><span class="red_star">*</span></td>
+		<th>性别</th>
+		<td>
+			<input type="radio" name="gander1" value="V1" checked />男
+			<input type="radio" name="gander" value="V1" />女
+		</td>
+	</tr>
+	<tr>
+		<th>职位</th>
+		<td><input name="T4" value="总经理" size="20" /><span class="red_star">*</span></td>
+		<th>办公电话</th>
+		<td><input name="T5" value="010-68348438-668" size="20" /><span class="red_star">*</span></td>
+	</tr>	
+	<tr>
+		<th>手机</th>
+		<td><input name="T1" value="13622883228" size="20" /></td>
+		<th>备注</th>
+		<td><input name="T2" size="20" /></td>
+	</tr>-->
+</table>
+</body>
+</html>

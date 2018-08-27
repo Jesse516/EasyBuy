@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>客户关系管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		function logOut(){
+			/*localStorage.removeItem("token");*/
+
+			window.location.href="../login.html";
+
+		}
+
+		var  loginUser=localStorage.getItem("loginUser")
+	</script>
+</head>
+
+<body style="border-bottom:solid 1px #666;">
+
+<TABLE style="width:100%;">
+<TR >
+	<td ><img src="images/logo.gif"></td>
+	<td style="font-family:黑体;font-size:33px;font-weight:bold;"> 客户关系管理系统</td>	
+	<td width="25%" align="right" style="font-size:12px;" valign="bottom">当前用户：admin &nbsp;&nbsp; <span onclick="logOut()">退出系统</span> </td>
+</tr>
+</table>
+</body>
+</html>

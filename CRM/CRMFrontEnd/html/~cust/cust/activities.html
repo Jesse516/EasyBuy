@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link href="../../css/style.css" rel="stylesheet" type="text/css" />
+<script src="../../script/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值客户编号*/
+			var start=url.indexOf("=");
+			var end=url.indexOf("&");
+			var cust_no=url.substr(start+1,end-start-1);
+			/*全路径后拼接的编号参数值客户名称*/
+			var cust_name=url.substr(url.lastIndexOf("=")+1);
+			$("#custNo").html(cust_no);
+			$("#custName").html(cust_name);
+			var str="<tr><th width=\"232\">时间</th><th>地点</th><th>概要</th><th>详细信息</th><th>备注</th><th>操作</th></tr>";
+			$.ajax({
+				url:"http://localhost:7701/findAllCstActivity/"+cust_no,
+				type:"get",
+				success:function(obj){
+					if(obj!=null){
+						for(var i=0;i<obj.length;i++){
+							str+="<tr>"+
+								"<td class='list_data_text'' width='230'>"+obj[i].atv_date+"</td>"+
+								"<td class='list_data_text'>"+obj[i].atv_place+"</td>"+
+								"<td class='list_data_ltext'>"+obj[i].atv_title+"</td>"+
+								"<td class='list_data_ltext'>"+obj[i].atv_desc+"</td>"+
+								"<td class='list_data_op'>"+obj[i].atv_memo+"</td>"+
+								"<td class='list_data_op'>"+
+									"<img onclick='updateActivity(\""+obj[i].atv_id+"\")' title='编辑'' src=\"../../images/bt_edit.gif\" class=\"op_button\" />"+
+									"<img onclick='delActivity(\""+obj[i].atv_id+"\")' \" title=\"删除\" src=\"../../images/bt_del.gif\" class=\"op_button\" />"+
+								"</td>"+
+								"</tr>";
+						}
+								$(".data_list_table").html(str);
+					}
+				},
+				error:function(){
+					alert("出现错误！");
+				}
+			})
+		})
+
+
+		//修改交往记录
+		function updateActivity(atv_id){
+			window.location.href="activities_edit.html?atv_id="+atv_id;
+		}
+
+		//删除交往记录
+		function  delActivity(atv_id){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值客户编号*/
+			var start=url.indexOf("=");
+			var end=url.indexOf("&");
+			var cust_no=url.substr(start+1,end-start-1);
+			/*全路径后拼接的编号参数值客户名称*/
+			var cust_name=url.substr(url.lastIndexOf("=")+1);
+			if(confirm("确定要删除吗？")){
+				$.ajax({
+					url:"http://localhost:7701/delActivityById/"+atv_id,
+					type:"delete",
+					success:function(obj){
+						if(obj!=null){
+							alert("删除成功！");
+							window.location.href="activities.html?cust_no="+cust_no+"&cust_name="+cust_name;
+						}
+					},
+					error:function(){
+						alert("出现错误");
+					}
+				})
+			}
+		}
+
+		//添加指定客户下记录
+		function addActivities(){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值客户编号*/
+			var start=url.indexOf("=");
+			var end=url.indexOf("&");
+			var cust_no=url.substr(start+1,end-start-1);
+			/*全路径后拼接的编号参数值客户名称*/
+			var cust_name=url.substr(url.lastIndexOf("=")+1);
+			window.location.href="activities_add.html?cust_no="+cust_no+"&cust_name="+cust_name;
+		}
+	</script>
+
+
+</head>
+<body>
+
+<div class="page_title">客户信息管理 &gt; 客户信息 &gt; 交往记录</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="addActivities();">新建</button>
+	<button class="common_button" onclick="back();">返回</button>  
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>客户编号</th>
+		<td id="custNo"></td>
+		<th>客户名称</th>
+		<td id="custName"></td>
+	</tr>
+	</table>
+<br />
+<table class="data_list_table">
+	<!--<tr>
+		<th width="232">时间</th>
+		<th>地点</th>
+		<th>概要</th>
+		<th>详细信息</th>
+		<th>备注</th>
+		<th>操作</th>
+	</tr>
+	<tr>
+		<td class="list_data_text" width="230">2007年10月09日</td>
+		<td class="list_data_text">友谊宾馆</td>
+		<td class="list_data_ltext">签订意向协议</td>
+		<td class="list_data_ltext">...</td>
+		<td class="list_data_op"></td>
+		<td class="list_data_op">
+			<img onclick="to('activities_edit.html');" title="编辑" src="../../images/bt_edit.gif" class="op_button" />
+			<img onclick="del('“交往记录：签订意向协议”');" title="删除" src="../../images/bt_del.gif" class="op_button" />
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_text" width="230">2007年08月01日</td>
+		<td class="list_data_text">公司</td>
+		<td class="list_data_ltext">2008年行业展望座谈会</td>
+		<td class="list_data_ltext">...</td>
+		<td class="list_data_op">主办单位:计算机报社</td>
+		<td class="list_data_op">
+			<img onclick="to('activities_edit.html');" title="编辑" src="../../images/bt_edit.gif" class="op_button" />
+			<img onclick="del('“交往记录：签订意向协议”');" title="删除" src="../../images/bt_del.gif" class="op_button" />
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_text" width="230">2007年07月25日</td>
+		<td class="list_data_text">公司</td>
+		<td class="list_data_ltext">邀请到公司参观</td>
+		<td class="list_data_ltext">...</td>
+		<td class="list_data_op"></td>
+		<td class="list_data_op">
+			<img onclick="to('activities_edit.html');" title="编辑" src="../../images/bt_edit.gif" class="op_button" />
+			<img onclick="del('“交往记录：签订意向协议”');" title="删除" src="../../images/bt_del.gif" class="op_button" />&nbsp;
+		</td>
+	</tr>-->
+	</table>
+</body>
+</html>

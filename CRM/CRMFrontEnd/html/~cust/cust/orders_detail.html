@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+<script src="../../script/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			//截取参数：订单号
+			var odr_id=url.substr(url.indexOf("=")+1);
+
+			var str="<table class=\"query_form_table\" height=\"59\">";
+			$.ajax({
+				url:"http://localhost:7701/findOrderLine/"+odr_id,
+				type:"get",
+				success:function(obj){
+					if(obj!=null){
+						str+="<tr>"+
+						"<th>订单编号</th>"+
+						"<td>"+obj.odr_id+"</td>"+
+						"<th>日期</th>"+
+						"<td>"+obj.odr_date+"</td>"+
+						"</tr>"+
+						"<tr>"+
+						"<th height=\"28\">送货地址</th>"+
+						"<td>"+obj.odr_addr+"</td>"+
+						"<th height=\"28\">总金额（元）</th>"+
+						"<td>"+obj.sumMoney+"</td>"+
+						"</tr>"+
+						"<tr>"+
+						"<th height=\"28\">状态</th>"+
+						"<td>"+obj.odr_status+"</td>"+
+						"<th height=\"28\">&nbsp;</th>"+
+						"<td>&nbsp;</td>"+
+						"</tr>"+
+						"</table>"+
+						"<br />"+
+						"<table class=\"data_list_table\">"+
+						"<tr>"+
+						"<th>商品</th>"+
+						"<th>数量</th>"+
+						"<th>单位</th>"+
+						"<th>单价（元）</th>"+
+						"<th>金额（元）</th>"+
+						"</tr>";
+						for(var i=0;i<obj.lines.length;i++){
+							str+="<tr>"+
+									"<td class=\"list_data_text\">"+obj.lines[i].prod_name+"</td>"+
+									"<td class=\"list_data_ltext\">"+obj.lines[i].odd_count+"</td>"+
+									"<td class=\"list_data_text\">"+obj.lines[i].odd_unit+"</td>"+
+									"<td class=\"list_data_text\">"+obj.lines[i].odd_price+"</td>"+
+									"<td class=\"list_data_text\">"+obj.lines[i].totleMoney+"</td>"+
+									"</tr>";
+
+						}
+						$("#msg_info").html(str);
+					}
+				},
+				error: function () {
+					alert("数据跑丢了！");
+				}
+			})
+		})
+
+	</script>
+
+
+</head>
+<body>
+
+<div class="page_title">客户信息管理 &gt; 客户信息 &gt; 历史订单 &gt; 订单明细 </div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="back();">返回</button>  
+</div>
+<div id="msg_info">
+	<!--<table class="query_form_table" height="59">
+		<tr>
+			<th>订单编号</th>
+			<td>1343445</td>
+			<th>日期</th>
+			<td>2007年11月13日</td>
+		</tr>
+		<tr>
+			<th height="28">送货地址</th>
+			<td>北京海淀区劳动路205号　</td>
+			<th height="28">总金额（元）</th>
+			<td>55200</td>
+		</tr>
+		<tr>
+			<th height="28">状态</th>
+			<td>已回款</td>
+			<th height="28">&nbsp;</th>
+			<td>&nbsp;</td>
+		</tr>
+		</table>
+	<br />
+	<table class="data_list_table">
+		<tr>
+			<th>商品</th>
+			<th>数量</th>
+			<th>单位</th>
+			<th>单价（元）</th>
+			<th>金额（元）</th>
+		</tr>
+		<tr>
+			<td class="list_data_text">海龙笔记本电脑-i60-2688 9966</td>
+			<td class="list_data_ltext">2</td>
+			<td class="list_data_text">台</td>
+			<td class="list_data_text">10800</td>
+			<td class="list_data_text">21600</td>
+		</tr>
+		<tr>
+			<td class="list_data_text">海龙笔记本电脑-i61-2689 6688</td>
+			<td class="list_data_ltext">2</td>
+			<td class="list_data_text">台</td>
+			<td class="list_data_text">16800</td>
+			<td class="list_data_text">33600</td>
+		</tr>
+		</table>-->
+</div>
+</body>
+</html>

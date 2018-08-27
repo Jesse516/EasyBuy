@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+<script src="../../script/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+
+		function addActivity(){
+			/*获取跳转全路径*/
+			var url=window.location.search;
+			/*全路径后拼接的编号参数值客户编号*/
+			var start=url.indexOf("=");
+			var end=url.indexOf("&");
+			var cust_no=url.substr(start+1,end-start-1);
+			/*全路径后拼接的编号参数值客户名称*/
+			var cust_name=url.substr(url.lastIndexOf("=")+1);
+			var atv_date=$("#atv_date").val();
+			var atv_place=$("#atv_place").val();
+			var atv_title=$("#atv_title").val();
+			var atv_desc=$("#atv_desc").val();
+			var atv_memo=$("#atv_memo").val();
+			/*alert(url);
+			alert(cust_no);
+			alert(cust_name);
+			alert(atv_date);
+			alert(atv_place);
+			alert(atv_title);
+			alert(atv_memo);
+			alert(atv_desc);*/
+			var data="{atv_cust_no:\""+cust_no+"\",atv_cust_name:\""+cust_name+"\",atv_date:\""+atv_date+"\",atv_place:\""+atv_place+"\",atv_title:\""+atv_title+"\",atv_desc:\""+atv_desc+"\",atv_memo:\""+atv_memo+"\"}";
+			$.ajax({
+				url:"http://localhost:7701/addActivity",
+				type:"post",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("添加成功！");
+						window.location.href="activities.html?cust_no="+cust_no+"&cust_name="+cust_name;
+					}
+				},
+				error:function(){
+					alert("添加错误");
+				}
+			})
+
+
+
+
+		}
+
+	</script>
+</head>
+<body>
+
+<div class="page_title">客户信息管理 > 客户信息 > 交往记录 > 新建交往记录</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="back();">返回</button>
+	<button class="common_button" onclick="addActivity();">保存</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>时间</th>
+		<td><input  id="atv_date" /><span class="red_star">*</span></td>
+		<th>地点</th>
+		<td>
+			<input name="T1" id="atv_place" size="20" /><span class="red_star">*</span></td>
+	</tr>
+	<tr>
+		<th>概要</th>
+		<td><input id="atv_title" /><span  class="red_star">*</span></td>
+		<th>备注</th>
+		<td><input id="atv_memo" /></td>
+	</tr>	
+	<tr>
+		<th>详细信息</th>
+		<td colspan="3">
+			<textarea id="atv_desc" cols="50" rows="6"></textarea>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

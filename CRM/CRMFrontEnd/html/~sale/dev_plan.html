@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script src="../script/common.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			var url=window.location.search;
+			var pla_chc_id=url.substr(url.indexOf("=")+1);
+			var str="<tr><th width=\"150px\">日期</th><th height=\"31\">计划项</th></tr>";
+			$.ajax({
+				url:"http://localhost:7702/findChance/"+pla_chc_id,
+				type:"get",
+				success:function(obj){
+					if(obj!=null){
+						$("#M1").html(obj.chc_id);
+						$("#M2").html(obj.chc_source);
+						$("#M3").html(obj.chc_cust_name);
+						$("#M4").html(obj.chc_rate);
+						$("#M5").html(obj.chc_title);
+						$("#M6").html(obj.chc_linkman);
+						$("#M7").html(obj.chc_tel);
+						$("#M8").html(obj.chc_desc);
+						$("#M9").html(obj.chc_create_by);
+						$("#M10").html(obj.chc_create_date);
+						$("#M11").html(obj.chc_due_to);
+						$("#M12").html(obj.chc_due_date);
+						if(obj.plan.length>0){
+							for(var i=0;i<obj.plan.length;i++){
+								str+="<tr>"+
+										"<td class=\"list_data_text\" height=\"24\">"+obj.plan[i].pla_date+"</td>"+
+										"<td class=\"list_data_ltext\" height=\"24\"><input size=\"50\" value=\""+obj.plan[i].pla_todo+"\" id=\"pla_todo\"  class=\"number"+obj.plan[i].pla_id+"\"  />"+
+										"<button class=\"common_button\"  onclick=\"updatePlan('"+obj.plan[i].pla_id+"');\" >保存</button>"+
+										"<button class=\"common_button\"  onclick=\"delPlan('"+obj.plan[i].pla_id+"');\">删除</button>"+
+										"</td>"+
+										"</tr>";
+							}
+							$("#table1").html(str);
+						}else{
+							str+="<tr><td colspan='2' align='center' style='font-size: 20px;color: red;font-style: italic;font-weight: bold'>还没有指定计划，现在可以添加</td></tr>"
+							$("#table1").html(str);
+						}
+					}
+				},
+				error:function(){
+					alert("页面跑丢了");
+				}
+			})
+		})
+
+
+		//执行修改功能
+		function updatePlan(pla_id){
+			var url=window.location.search;
+			var pla_chc_id=url.substr(url.indexOf("=")+1);
+			var pla_todo=$(".number"+pla_id).val();
+			var data={pla_id:pla_id,pla_todo:pla_todo,};
+			$.ajax({
+				url:"http://localhost:7702/updatePlan",
+				type:"post",
+				data:JSON.stringify(data),
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("修改成功！")
+						$(".number"+pla_id).val(pla_todo);
+					}
+				},
+				error:function(){
+					alert("修改失败！！");
+				}
+			})
+
+		}
+		//执行删除功能
+		function delPlan(pla_id){
+			var data="{pla_id:\""+pla_id+"\"}";
+			$.ajax({
+				url:"http://localhost:7702/delPlan",
+				type:"post",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("删除成功！")
+						window.location.href="dev.html";
+					}
+				},
+				error:function(){
+					alert("删除失败！！");
+				}
+			})
+		}
+
+		//执行添加功能
+		function addPan(){
+			var url=window.location.search;
+			var pla_chc_id=url.substr(url.indexOf("=")+1);
+			var pla_todo=$("#new_pla_todo").val();
+			var pla_date=$("#new_pla_date").val();
+			var data={pla_chc_id:pla_chc_id,pla_todo:pla_todo,pla_date:pla_date};
+			$.ajax({
+				url:"http://localhost:7702/addPlan",
+				type:"post",
+				data:JSON.stringify(data),
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("添加成功！")
+						window.location.href="dev.html";
+					}
+				},
+				error:function(){
+					alert("添加失败！！");
+				}
+			})
+		}
+
+		function getTime(){
+			//获取当前时间
+			var d = new Date();
+			var year=d.getFullYear();
+			var month=d.getMonth()+1;
+			if(month<10){
+				month="0"+month;
+			}
+			var date=d.getDate();
+			if(date<10){
+				date="0"+date;
+			}
+			var hour=d.getHours();
+			if(hour==00){
+				hour="00";
+			}
+			var minutes= d.getMinutes();
+			if(minutes<10){
+				minutes="0"+minutes;
+			}
+			var second= d.getSeconds();
+			if(second<10){
+				second="0"+second;
+			}
+			var time=year+"-"+month+"-"+date+" "+hour+":"+minutes+":"+second;
+			$("#new_pla_date").val(time);
+		}
+
+
+		//点击右上角 执行计划按钮
+		function doPlan(){
+			var url=window.location.search;
+			var pla_chc_id=url.substr(url.indexOf("=")+1);
+			window.location.href="dev_execute.html?pla_id="+pla_chc_id;
+		}
+
+
+	</script>
+</head>
+<body>
+
+<div class="page_title">客户开发计划 &gt; 制定计划</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="doPlan();">执行计划</button>
+	<button class="common_button" onclick="back();">返回</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>编号</th>
+		<td id="M1"></td>
+		<th>机会来源</th>
+		<td id="M2"></td>
+	</tr>
+	<tr>
+		<th>客户名称</th>
+		<td id="M3"></td>
+		<th>成功机率（%）</th>
+		<td id="M4">&nbsp;</td>
+	</tr>	
+	<tr>
+		<th>概要</th>
+		<td colspan="3" id="M5"></td>
+	</tr>
+	<tr>
+		<th>联系人</th>
+		<td id="M6"></td>
+		<th>联系人电话</th>
+		<td id="M7"></td>
+	</tr>
+	<tr>
+		<th>机会描述</th>
+		<td colspan="3" id="M8"></td>
+	</tr>
+	<tr>
+		<th>创建人</th>
+		<td id="M9"></td>
+		<th>创建时间</th>
+		<td id="M10"></td>
+	</tr>
+	<tr>
+		<th>指派给</th>
+		<td id="M11">郭小美</td>
+		<th>指派时间</th>
+		<td id="M12"></td>
+	</tr>
+</table>
+<br />
+<table class="data_list_table" id="table1">
+	<!--<tr>
+		<th width="150px">日期</th>
+		<th height="31">计划项</th>
+	</tr>
+	<tr>
+		<td class="list_data_text" height="24">2008年01月18日</td>
+		<td class="list_data_ltext" height="24"><input size="50" value="初步接触，了解客户意向。" />
+		<button class="common_button" onclick="save('dev_plan.html');">保存</button>
+		<button class="common_button" onclick="del('');">删除</button>
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_text">2008年02月22日</td>
+		<td class="list_data_ltext"><input size="50" value="推介产品。" name="T1" />
+	<button class="common_button" onclick="save('dev_plan.html');">保存</button>
+	<button class="common_button" onclick="del('');">删除</button>
+		</td>
+	</tr>-->
+</table>
+<div class="button_bar">
+	<button class="common_button" onclick="addPan();">保存</button>
+	</div>
+<table class="query_form_table" id="table2">
+	<tr>
+		<th>日期</th>
+		<td><input id="new_pla_date" onclick="getTime()"/><span class="red_star">*</span></td>
+		<th>计划项</th>
+		<td>
+			<input size="50" name="T2" id="new_pla_todo" onclick="getTime()"/><span class="red_star">*</span>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

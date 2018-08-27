@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目-服务处理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+<script src="../../script/common.js"></script>
+	<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+			$(function(){
+				showList();
+			})
+
+			//公用函数
+			function showList(){
+				var svr_cust_name=$("#svr_cust_name").val();
+				var svr_title=$("#svr_title").val();
+				var svr_type=$("#svr_type").val();
+				var start_svr_create_date=$("#start_svr_create_date").val();
+				var end_svr_create_date=$("#end_svr_create_date").val();
+				var svr_status=$("#svr_status").val();
+				var pageNo=$("#c_pageNo").val();
+				var pageSize=$("#c_pageSize").val();
+
+				var data={svr_cust_name:svr_cust_name,svr_title:svr_title,svr_type:svr_type,start_svr_create_date:start_svr_create_date,
+					end_svr_create_date:end_svr_create_date,svr_status:svr_status,pageNo:pageNo,pageSize:pageSize};
+				var str="<tr><th>编号</th><th>客户</th><th>概要</th><th>服务类型</th><th>创建人</th><th>创建日期</th><th>操作</th></tr>";
+				$.ajax({
+					url:"http://localhost:7703/svrApiFindAll",
+					data:JSON.stringify(data),
+					type:"post",
+					contentType:"application/json;charset=utf-8",
+					success:function(obj){
+						if(obj!=null){
+							for(var i=0;i<obj.svrlist.length;i++){
+								str+="<tr>"+
+										"<td class=\"list_data_number\">"+obj.svrlist[i].svr_id+"</td>"+
+										"<td class=\"list_data_text\">"+obj.svrlist[i].svr_cust_name+"</td>"+
+										"<td class=\"list_data_ltext\">"+obj.svrlist[i].svr_title+"</td>"+
+										"<td class=\"list_data_text\">"+obj.svrlist[i].svr_type+"</td>"+
+										"<td class=\"list_data_text\">"+obj.svrlist[i].svr_create_by+"</td>"+
+										"<td class=\"list_data_text\">"+obj.svrlist[i].svr_create_date+"</td>"+
+										"<td class=\"list_data_op\">"+
+										"<img onclick=\"dealSvr('"+obj.svrlist[i].svr_id+"')\" title=\"处理\" src=\"../../images/bt_deal.gif\" class=\"op_button\" /></td></tr>";
+
+							}
+							str+="<tr>"+
+									"<th colspan=\"8\" class=\"pager\">"+
+									"<div class=\"pager\">"+
+									"共<span id=\"countrecord\">"+obj.countRecord+"</span>条记录 每页<input value=\""+obj.pageSize+"\" size=\"2\" id=\"pageSize\"/>条"+
+									"第<input value=\""+obj.pageNo+"\" size=\"2\" id=\"pageNo\"/>页/共<span id=\"countPage\" >"+obj.countPage+"</span>页"+
+									"<a><span onclick=\"firstPage()\" >第一页</span></a>"+
+									"<a><span onclick=\"upPage()\" >上一页</span></a>"+
+									"<a><span onclick=\"nextPage()\" >下一页</span></a>"+
+									"<a><span onclick=\"lastPage()\" >最后一页</span></a>"+
+									"转到<input value=\"1\" size=\"2\" id=\"targetPage\"/>页"+
+									"<button width=\"20\" onclick=\"targetPage()\">GO</button>"+
+									"</div>"+
+									"</th>"+
+									"</tr>";
+
+							$("#c_pageNo").val(obj.pageNo);
+							$("#c_pageSize").val(obj.pageSize);
+							$("#c_data_list").html(str);
+						}else{
+							$("#svr_cust_name").val("");
+							$("#svr_title").val("");
+							$("#svr_type").val("");
+							$("#start_svr_create_date").val("");
+							$("#end_svr_create_date").val("");
+							$("#svr_status").val("");
+							$("#c_data_list").html("<p align='center' style='margin-top: 100px;font-size: 30px;color: red;font-style: italic'>抱歉，没有符合您需要的数据，请重新查询</p>");
+						}
+					},
+					error:function(){
+						$("#c_data_list").html("<p align='center' style='margin-top: 100px;font-size: 30px;color: red;font-style: italic'>抱歉，没有符合您需要的数据，请重新查询</p>");
+					}
+				})
+			}
+
+
+
+			//点击查询时执行
+			function searchSvr(){
+				showList();
+			}
+
+			//点击第一页
+			function firstPage(){
+				/*alert($("#c_pageNo").val());
+				 alert($("#c_pageSize").val());*/
+				$("#c_pageNo").val(1);
+				showList();
+			}
+			//点击上一页
+			function upPage(){
+				/*alert($("#c_pageNo").val());
+				 alert($("#c_pageSize").val());*/
+				var pageNo=$("#pageNo").val()
+				var pageSize=$("#pageSize").val();
+				$("#c_pageNo").val(pageNo-1);
+				$("#c_pageSize").val(pageSize);
+				showList();
+			}
+
+			//点击下一页
+			function nextPage(){
+				/*alert($("#c_pageNo").val());
+				 alert($("#c_pageSize").val());*/
+				var pageNo=$("#pageNo").val();
+				var newPageNo=parseInt(pageNo)+parseInt(1);
+				var pageSize=$("#pageSize").val();
+				$("#c_pageNo").val(newPageNo);
+				$("#c_pageSize").val(pageSize);
+				showList();
+			}
+
+			//点击最后一页
+			function lastPage(){
+				/*alert($("#c_pageNo").val());
+				 alert($("#c_pageSize").val());*/
+				var pageNo=$("#countPage").html()
+				var pageSize=$("#pageSize").val();
+				$("#c_pageNo").val(pageNo);
+				$("#c_pageSize").val(pageSize);
+				showList();
+			}
+
+
+			//点击跳转页
+			function targetPage(){
+				/*alert($("#c_pageNo").val());
+				 alert($("#c_pageSize").val());*/
+				var pageNo=$("#targetPage").val()
+				var pageSize=$("#pageSize").val();
+				$("#c_pageNo").val(pageNo);
+				$("#c_pageSize").val(pageSize);
+				showList();
+			}
+
+
+			//执行处理服务功能，跳转deal_detail.html
+			function dealSvr(svr_id){
+				window.location.href="deal_detail.html?svr_id="+svr_id;
+			}
+
+
+
+
+	</script>
+</head>
+<body>
+
+<div class="page_title">客户服务管理 &gt; 服务处理</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="searchSvr();">查询</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th height="28">客户</th>
+		<td><input id="svr_cust_name" /></td>
+		<th height="28">概要</th>
+		<td><input id="svr_title"/></td>
+		<th height="28">服务类型</th>
+		<td>
+			<select name="D1" id="svr_type">
+				<option>全部</option>
+				<option>咨询</option>
+				<option>建议</option>
+				<option>投诉</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th height="32">创建日期</th>
+		<td colspan="3">
+			<input name="T2" size="10" id="start_svr_create_date"/> - <input name="T1" size="10" id="end_svr_create_date"/></td>
+		<th height="32">状态</th>
+		<td>
+			<select name="D1" id="svr_status">
+				<option selected>已分配</option>
+			</select>
+		</td>
+	</tr>
+</table>
+<br />
+<table class="data_list_table" id="c_data_list">
+<!--	<tr>
+		<th>编号</th>
+		<th>客户</th>
+		<th>概要</th>
+		<th>服务类型</th>
+		<th>创建人</th>
+		<th>创建日期</th>
+		<th>操作</th>
+	</tr>
+	<tr>
+		<td class="list_data_number">456</td>
+		<td class="list_data_text">太阳药业</td>
+		<td class="list_data_ltext">询问收音机订单运费承担方式</td>
+		<td class="list_data_text">咨询</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+						
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" />  
+			
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_number">455</td>
+		<td class="list_data_text">太阳药业</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">咨询</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<td class="list_data_number">454</td>
+		<td class="list_data_text">云南天河烟草公司</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">咨询</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<td class="list_data_number">453</td>
+		<td class="list_data_text">云南天河烟草公司</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">建议</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<td class="list_data_number">452</td>
+		<td class="list_data_text">云南天河烟草公司</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">咨询</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<td class="list_data_number">451</td>
+		<td class="list_data_text">云南天河烟草公司</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">投诉</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>	
+	<tr>
+		<td class="list_data_number" height="15">540</td>
+		<td class="list_data_text" height="15">云南天河烟草公司</td>
+		<td class="list_data_ltext" height="15">询问收音机价格</td>
+		<td class="list_data_text" height="15">建议</td>
+		<td class="list_data_text" height="15">小明</td>
+		<td class="list_data_text" height="15">2007年12月02日</td>
+		<td class="list_data_op" height="15">
+						
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>	
+	<tr>
+		<td class="list_data_number" height="35">439</td>
+		<td class="list_data_text" height="35">云南天河烟草公司</td>
+		<td class="list_data_ltext" height="35">询问收音机价格</td>
+		<td class="list_data_text" height="35">咨询</td>
+		<td class="list_data_text" height="35">小明</td>
+		<td class="list_data_text" height="35">2007年12月02日</td>
+		<td class="list_data_op" height="35">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<td class="list_data_number">438</td>
+		<td class="list_data_text">云南天河烟草公司</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">建议</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<td class="list_data_number">437</td>
+		<td class="list_data_text">云南天河烟草公司</td>
+		<td class="list_data_ltext">询问收音机价格</td>
+		<td class="list_data_text">建议</td>
+		<td class="list_data_text">小明</td>
+		<td class="list_data_text">2007年12月02日</td>
+		<td class="list_data_op">
+									
+			<img onclick="to('deal_detail.html');" title="处理" src="../../images/bt_deal.gif" class="op_button" /></td>
+	</tr>
+	<tr>
+		<th colspan="7" class="pager">
+<div class="pager">
+	共59条记录 每页<input value="10" size="2" />条
+	第<input value="1" size="2"/>页/共5页
+	<a href="#">第一页</a>
+	<a href="#">上一页</a>
+	<a href="#">下一页</a>
+	<a href="#">最后一页</a>
+	转到<input value="1" size="2" />页
+	<button width="20" onclick="reload();">GO</button>
+</div>
+		</th>
+	</tr>-->
+</table>
+<input type="hidden" id="c_pageNo" /><input type="hidden" id="c_pageSize" />
+</body>
+</html>

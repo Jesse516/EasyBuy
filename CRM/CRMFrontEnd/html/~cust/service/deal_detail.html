@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目-------服务处理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../../css/style.css" rel="stylesheet" type="text/css">
+<script src="../../script/common.js"></script>
+	<script type="text/javascript" src="../../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			var loginUser=localStorage.getItem("loginUser");
+			$("#svr_deal_by").val(loginUser);
+
+			getTime();
+
+			var url=window.location.search;
+			var svr_id=url.substr(url.indexOf("=")+1)
+			$.ajax({
+				url:"http://localhost:7703/findBySvr/"+svr_id,
+				type:"get",
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						$("#svr_id").html(obj.svr_id);
+						$("#svr_type").html(obj.svr_type);
+						$("#svr_title").html(obj.svr_title);
+						$("#svr_cust_name").html(obj.svr_cust_name);
+						$("#svr_status").html(obj.svr_status);
+						$("#svr_request").html(obj.svr_request);
+						$("#svr_create_by").html(obj.svr_create_by);
+						$("#svr_create_date").html(obj.svr_create_date);
+						$("#svr_due_to").html(obj.svr_due_to);
+						$("#svr_due_date").html(obj.svr_due_date);
+					}
+				}
+			})
+		})
+
+
+		//执行处理保存过程
+		function dealDetail(){
+			var url=window.location.search;
+			var svr_id=url.substr(url.indexOf("=")+1)
+
+			var svr_deal=$("#svr_deal").val();
+			var svr_deal_by=$("#svr_deal_by").val();
+
+			var svr_deal_date=$("#svr_deal_date").val();
+			var svr_result=$("#svr_result").val();
+			var svr_satisfy=$("#svr_satisfy").val();
+			var data={svr_id:svr_id,svr_deal:svr_deal,svr_deal_by:svr_deal_by,svr_deal_date:svr_deal_date,svr_result:svr_result,svr_satisfy:svr_satisfy,svr_status:'已处理'};
+			$.ajax({
+				url:"http://localhost:7703/dealdeailSvr",
+				data:JSON.stringify(data),
+				type:"post",
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("修改成功！");
+					}
+				},
+				error:function(){
+					alert("修改失败！");
+				}
+			})
+		}
+
+
+
+
+		//获得当前时间
+		function getTime(){
+			//获取当前时间
+			var d = new Date();
+			var year=d.getFullYear();
+			var month=d.getMonth()+1;
+			if(month<10){
+				month="0"+month;
+			}
+			var date=d.getDate();
+			if(date<10){
+				date="0"+date;
+			}
+			var hour=d.getHours();
+			if(hour==00){
+				hour="00";
+			}
+			var minutes= d.getMinutes();
+			if(minutes<10){
+				minutes="0"+minutes;
+			}
+			var second= d.getSeconds();
+			if(second<10){
+				second="0"+second;
+			}
+			var time=year+"-"+month+"-"+date+" "+hour+":"+minutes+":"+second;
+
+			$("#t3").val(time);
+		}
+
+
+	</script>
+
+
+</head>
+<body>
+
+<div class="page_title">客户服务管理 &gt; 服务处理</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="back();">返回</button> 
+	<button class="common_button" onclick="dealDetail();">保存</button>
+</div>
+<table class="query_form_table">
+	<tr>
+		<th>编号</th>
+		<td id="svr_id"></td>
+		<th>服务类型</th>
+		<td id="svr_type"></td>
+	</tr>
+	<tr>
+		<th >概要</th>
+		<td colspan="3" id="svr_title"></td>
+	</tr>	
+	<tr>
+		<th>客户</th>
+		<td id="svr_cust_name"></td>
+		<th>状态</th>
+		<td id="svr_status"></td>
+	</tr>	
+	<tr>
+		<th>服务请求</th>
+		<td colspan="3" id="svr_request">？<br>
+　</td>
+	</tr>
+	<tr>
+		<th>创建人</th>
+		<td id="svr_create_by"></td>
+		<th>创建时间</th>
+		<td id="svr_create_date"></td>
+	</tr>
+	</table>
+<br />
+<table class="query_form_table" id="table3">
+	<tr>
+		<th>分配给</th>
+		<td id="svr_due_to"></td>
+		<th>分配时间</th>
+		<td id="svr_due_date"></td>
+	</tr>
+</table>
+<br />	
+<table class="query_form_table" id="table1">
+	<tr>
+		<th>服务处理</th>
+		<td colspan="3"><textarea rows="6" cols="50" onclick="getTime()" id="svr_deal"></textarea><span class="red_star">*</span></td>
+	</tr>
+	<tr>
+		<th>处理人</th>
+		<td><input name="T17" value="" readonly size="20" id="svr_deal_by"/><span class="red_star">*</span></td>
+		<th>处理时间</th>
+		<td><input id="t3" name="T16" readonly size="20" id="svr_deal_date" /><span class="red_star">*</span></td>
+	</tr>
+</table>
+<br />
+<table disabled class="query_form_table" id="table2">
+	<tr>
+		<th>处理结果</th>
+		<td><input name="T10" size="20"  id="svr_result"  /><span class="red_star">*</span></td>
+		<th>满意度</th>
+		<td>
+			<select name="D1"  id="svr_satisfy" >
+				<option value="0">请选择...</option>
+				<option value="5">☆☆☆☆☆</option>
+				<option value="4">☆☆☆☆</option>
+				<option value="3">☆☆☆</option>
+				<option value="2">☆☆</option>
+				<option value="1">☆</option>
+			</select><span class="red_star">*</span></td>
+	</tr>
+</table>
+<script>
+	setCurTime('t3');
+</script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>jb-aptech毕业设计项目</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
+<script src="../script/common.js"></script>
+<script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+	<script type="text/javascript">
+		/*function checkStatus(){
+			var status=$("#chc_status");
+			for(var i=0;i<status.lang;i++){
+
+			}
+			alert(status.lang);
+			if(status="已归档"){
+				$("#M1").css(display,"none");
+				$("#M2").css(display,"none");
+				$("#M3").css(display,"none");
+			}else{
+				$("#M4").css(display,"none");
+			}
+		}*/
+		//页面加载之前第一次异步查找数据显示
+		$(function(){
+			showList();
+			checkStatus();
+		})
+		//封装一个函数，可以多次调用
+		function showList(){
+			var pageNo=$("#c_pageNo").val();
+			var pageSize=$("#c_pageSize").val();
+			var cust_name=$("#chc_cust_name").val();
+			var c_title=$("#chc_title").val();
+			var linkManName=$("#chc_linkman").val();
+			var data="{pageNo:\""+pageNo+"\",pageSize:\""+pageSize+"\",cust_name:\""+cust_name+"\",c_title:\""+c_title+"\",linkManName:\""+linkManName+"\"}";
+			var str="<tr><th>编号</th><th>客户名称</th><th>概要</th><th>联系人</th><th>联系人电话</th><th>创建时间</th><th>状态</th><th>操作</th></tr>";
+			$.ajax({
+				url:"http://localhost:7702/findAllAclChance",
+				type:"post",
+				data:data,
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null && obj.tlist.length>0){
+						for(var i=0;i<obj.tlist.length;i++){
+							str+="<tr>"+
+									"<td class=\"list_data_number\" id=\"chc_id\">"+obj.tlist[i].chc_id+"</td>"+
+									"<td class=\"list_data_text\" id=\"c_cust_name\">"+obj.tlist[i].chc_cust_name+"</td>"+
+									"<td class=\"list_data_ltext\" id=\"c_title\">"+obj.tlist[i].chc_title+"</td>"+
+									"<td class=\"list_data_text\" id=\"c_linkman\">"+obj.tlist[i].chc_linkman+"</td>"+
+									"<td class=\"list_data_text\" id=\"chc_tel\">"+obj.tlist[i].chc_tel+"</td>"+
+									"<td class=\"list_data_text\" id=\"chc_create_date\">"+obj.tlist[i].chc_create_date+"</td>" +
+									"<td class=\"list_data_text\" id=\"chc_status\">"+obj.tlist[i].chc_status+"</td>"+
+									"<td class=\"list_data_op\" >"+
+										"<img onclick=\"makeSalPlan('"+obj.tlist[i].chc_id+"');\" title=\"制定计划\" src=\"../images/bt_plan.gif\" class=\"op_button\" id=\"M1\"/>"+
+										"<img onclick=\"doSalPlan('"+obj.tlist[i].chc_id+"');\" title=\"执行计划\" src=\"../images/bt_feedback.gif\" class=\"op_button\" id=\"M2\" />"+
+										"<img onclick=\"successPlan('"+obj.tlist[i].chc_id+"');\" title=\"开发成功\" src=\"../images/bt_yes.gif\" class=\"op_button\" id=\"M3\" />" +
+										"<img onclick=\"detailPlan('"+obj.tlist[i].chc_id+"');\" title=\"查看\" src=\"../images/bt_detail.gif\" class=\"op_button\"  id=\"M4\"/>"+
+									"</td>"+
+									"</tr>";
+						}
+						str+="<tr>"+
+								"<th colspan=\"7\" class=\"pager\">"+
+								"<div class=\"pager\">"+
+								"共<span id=\"countrecord\">"+obj.countRecord+"</span>条记录 每页<input value=\""+obj.pageSize+"\" size=\"2\" id=\"pageSize\"/>条"+
+								"第<input value=\""+obj.pageNo+"\" size=\"2\" id=\"pageNo\" />页/共<span id=\"countPage\">"+obj.countPage+"</span>页"+
+								"<a><span onclick=\"firstPage()\" >第一页</span></a>"+
+								"<a><span onclick=\"upPage()\" >上一页</span></a>"+
+								"<a><span onclick=\"nextPage()\" >下一页</span></a>"+
+								"<a><span onclick=\"lastPage()\" >最后一页</span></a>"+
+								"转到<input value=\"1\" size=\"2\" id=\"targetPage\"/>页"+
+								"<button width=\"20\" onclick=\"targetPage()\">GO</button>"+
+								"</div>"+
+								"</th>"+
+								"</tr>";
+
+						$("#c_pageNo").val(obj.pageNo);
+						$("#c_pageSize").val(obj.pageSize);
+						$("#c_data_list").html(str);
+
+					}else{
+						$("#chc_cust_name").val("");
+						$("#chc_title").val("");
+						$("#chc_linkman").val("");
+						$("#c_data_list").html("<p align='center' style='margin-top: 100px;font-size: 30px;color: red;font-style: italic'>抱歉，没有符合您需要的数据，请重新查询</p>");
+					}
+				},
+				error:function(){
+					alert("数据跑丢了！");
+				}
+			})
+		}
+
+		//点击查询时执行
+		function searchChance(){
+			showList();
+
+		}
+
+		//点击第一页
+		function firstPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			$("#c_pageNo").val(1);
+			showList();
+		}
+		//点击上一页
+		function upPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#pageNo").val()
+			var pageSize=$("#pageSize").val();
+			$("#c_pageNo").val(pageNo-1);
+			$("#c_pageSize").val(pageSize);
+			showList();
+		}
+
+		//点击下一页
+		function nextPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#pageNo").val();
+			var newPageNo=parseInt(pageNo)+parseInt(1);
+			var pageSize=$("#pageSize").val();
+			$("#c_pageNo").val(newPageNo);
+			$("#c_pageSize").val(pageSize);
+			showList();
+		}
+
+		//点击最后一页
+		function lastPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#countPage").html()
+			var pageSize=$("#pageSize").val();
+			$("#c_pageNo").val(pageNo);
+			$("#c_pageSize").val(pageSize);
+			showList();
+		}
+
+
+		//点击跳转页
+		function targetPage(){
+			/*alert($("#c_pageNo").val());
+			 alert($("#c_pageSize").val());*/
+			var pageNo=$("#targetPage").val()
+			var pageSize=$("#pageSize").val();
+			$("#c_pageNo").val(pageNo);
+			$("#c_pageSize").val(pageSize);
+			showList();
+		}
+
+		// 制定计划
+		function makeSalPlan(pla_id){
+			window.location.href="dev_plan.html?pla_id="+pla_id;
+		}
+		// 执行计划功能
+		function doSalPlan(pla_id){
+			window.location.href="dev_execute.html?pla_id="+pla_id;
+
+
+		}
+		// 开发成功执行
+		function successPlan(chc_id){
+			var chc_status="开发成功";
+			var data="{chc_id:\""+chc_id+"\",chc_status:\"开发成功\"}";
+			$.ajax({
+				url:"http://localhost:7702/updateStatus",
+				data:data,
+				type:"post",
+				contentType:"application/json;charset=utf-8",
+				success:function(obj){
+					if(obj!=null){
+						alert("用户开发成功，已添加新客户记录！");
+						window.location.href="dev.html";
+					}
+				},
+				error:function (){
+					alert("出现错误！");
+				}
+			})
+		}
+
+
+		//查看明细按钮功能
+		function detailPlan(chc_id){
+			window.location.href="dev_detail.html?chc_id="+chc_id;
+
+		}
+
+
+	</script>
+</head>
+<body>
+
+<div class="page_title">客户开发计划</div>
+<div class="button_bar">
+	<button class="common_button" onclick="help('');">帮助</button>
+	<button class="common_button" onclick="searchChance()">查询</button>
+	</div>
+<table class="query_form_table">
+	<tr>
+		<th>客户名称</th>
+		<td><input id="chc_cust_name" /></td>
+		<th>概要</th>
+		<td><input id="chc_title" /></td>
+		<th>联系人</th>
+		<td>
+			<input name="T1" size="20" id="chc_linkman" />
+		</td>
+	</tr>
+	</table>
+<br />
+<table class="data_list_table" id="c_data_list">
+	<!--<tr>
+		<th>编号</th>
+		<th>客户名称</th>
+		<th>概要</th>
+		<th>联系人</th>
+		<th>联系人电话</th>
+		<th>创建时间</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	<tr>
+		<td class="list_data_number">1</td>
+		<td class="list_data_text">睿智数码</td>
+		<td class="list_data_ltext">采购笔记本电脑意向</td>
+		<td class="list_data_text">刘先生</td>
+		<td class="list_data_text">13729239239</td>
+		<td class="list_data_text">2007年12月06日</td>
+		<td class="list_data_text">开发中</td>
+		<td class="list_data_op">
+			<img onclick="to('dev_plan.html');" title="制定计划" src="../images/bt_plan.gif" class="op_button" />
+			<img onclick="to('dev_execute.html');" title="执行计划" src="../images/bt_feedback.gif" class="op_button" />
+			<img onclick="alert('用户开发成功，已添加新客户记录。');" title="开发成功" src="../images/bt_yes.gif" class="op_button" />
+		</td>
+	</tr>
+	<tr>
+		<td class="list_data_number">2</td>
+		<td class="list_data_text">泰宝实业</td>
+		<td class="list_data_ltext">采购笔记本电脑意向</td>
+		<td class="list_data_text">马先生</td>
+		<td class="list_data_text">13333239239</td>
+		<td class="list_data_text">2007年11月16日</td>
+		<td class="list_data_text">已归档</td>
+		<td class="list_data_op">
+			<img onclick="to('dev_detail.html');" title="查看" src="../images/bt_detail.gif" class="op_button" />
+		</td>
+	</tr>
+	<tr>
+		<th colspan="10" class="pager">
+<div class="pager">
+	共<span id="countrecord">59</span>条记录 每页<input value="10" size="2" id="pageSize"/>条
+	第<input value="1" size="2" id="pageNo" />页/共<span id="countPage">5</span>页
+	<a><span onclick="firstPage()" >第一页</span></a>
+	<a><span onclick="uppage()" >上一页</span></a>
+	<a><span onclick="nextPage()" >下一页</span></a>
+	<a><span onclick="lastPage()" >最后一页</span></a>
+	转到<input value="1" size="2" id="targetPage"/>页
+	<button width="20" onclick="targetPage()">GO</button>
+</div>
+		</th>
+	</tr>-->
+</table>
+<input type="hidden" id="c_pageNo"/><input  type="hidden" id="c_pageSize"/>
+</body>
+</html>
